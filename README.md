@@ -14,7 +14,7 @@ authenticate with MAL, visit a user's page and get affinity.
 Results are at [`erkghlerngm44_results.txt`](erkghlerngm44_results.txt) 
 (apologies for the shit taste).
 
-Ran this script from 17:27 to 18:27 (approx) on the 10th April. As you can see,
+Ran this script from 17:27 to 18:27 BST (approx) on the 10th April. As you can see,
 malaffinity returns the same affinity as MAL 100% of the time.
 
 
