@@ -131,6 +131,8 @@ def handle_comment(comment):
     # Shared count on MAL's out of whack as well. (Includes PTW + unrated for some reason)
     our_affinity = our_affinity[0]
 
+    print("- MALAffinity says affinity is {}%".format(our_affinity))
+
     # Halt again.
     time.sleep(wait_between_requests)
 
@@ -140,6 +142,8 @@ def handle_comment(comment):
     if not mal_affinity:
         print("- MAL refused to give us the affinity for some reason. Ah well.")
         return
+
+    print("- MAL says affinity is {}%".format(mal_affinity))
 
     # More bad var naming. Sorry.
     # Used "match" a few lines up and don't want to run into dodgy stuff.
