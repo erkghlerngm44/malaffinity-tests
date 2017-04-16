@@ -187,30 +187,22 @@ def main():
     print("Script runtime: {} seconds".format(runtime))
     print("Writing results...")
 
-    # Set the tableprint stuff up now.
-    table = tableprint.TablePrint(space_out=15, stdout=False)
+    # Write to pretty table.
+    table = tableprint.TablePrint("results.txt", space_out=15)
 
-    # Open up the results file for saving, and write the headers in.
-    with open("results.txt", "w") as file:
-        # TODO: Make tableprint better. Style like csv module.
-        header = table.tableprint("MAL Username", "Our Affinity", "MAL Affinity", "Match?", is_header=True)
+    table.write_row("MAL Username", "Our Affinity", "MAL Affinity", "Match?", is_header=True)
 
-        # So ugly.
-        # TODO: Use format strings. I hate concatenation.
-        file.write(header + "\n")
-        file.write("-" * len(header) + "\n")
+    for result in results:
+        row = [
+            result["username"],
+            result["our_affinity"],
+            result["mal_affinity"],
+            result["match"]
+        ]
 
-        for result in results:
-            # Put results in order. Should've just gone with CSV *sigh*
-            # TODO: Fix this shit
-            row = [
-                result["username"],
-                result["our_affinity"],
-                result["mal_affinity"],
-                result["match"]
-            ]
+        table.write_row(row)
 
-            file.write( table.tableprint(row) + "\n" )
+    table.close()
 
     return
 

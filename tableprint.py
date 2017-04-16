@@ -1,56 +1,88 @@
-#!/usr/bin/env python3
+import sys
+import io
 
 
-# TablePrint module (self-made), copied here for convenience.
 class TablePrint:
-    # 2017-04-06: Allow stdout to be specified during init, so doesn't
-    # need to be set all the time.
-    def __init__(self, space_out=10, stdout=True):
+    def __init__(self, fn=None, space_out=10):
         """
-        Prints data in a visually friendly way.
+        Prints data in a visually-friendly way.
 
+        :param fn: Path of file to write data to. Specify `None` to use stdout.
         :param space_out: The number of spaces to be printed to separate each value
                           passed to the `tableprint` function. The length of each
                           value will be minused from this number, for even spacing.
-        :param stdout: Should the output go to stdout? If true, the output will be printed.
-                       If false, output will be returned to you (and will need to be captured).
         """
-        self._space_out = int(space_out)
-        self._stdout = stdout
 
-    def tableprint(self, *data, is_header=False):
+        if fn:
+            # Ask for the filename instead of the file object, so we're not
+            # dealing with messy objects being referenced in multiple places,
+            # leading to dodgy stuff happening.
+            self._fp = open(fn, "w")
+        else:
+            # Default to stdout if no fp specified.
+            self._fp = sys.stdout
+
+        self._space_out = space_out
+
+    def write_row(self, *data, is_header=False):
         """
         Create a table row.
 
-        :param data: The data you want to be converted. An array can be passed if needed.
-        :param is_header: Is the input a header? If set to True, and stdout is also True,
-                          a line row separator will be printed after the headers are printed.
-        :return: Nothing if stdout is true, the formatted table row if stdout is False.
+        :param data: The data. An array can be passed if needed.
+        :param is_header: Is the input a header? Print a series of "-"s after
+                          the data to create a line row separator
+        :return: Nothing.
         """
 
-        # TODO: Make is_header more useful when stdout=False
+        # See if file has been closed. If so, we can't write to it.
+        if self._fp.closed:
+            # TODO: Check I'm doing this right
+            raise IOError("fp has been closed. Please create another instance "
+                          "of this class to perform table functions")
 
-        if type(data[0]) == list: data = data[0]
-        res = ""
+        # Array support.
+        # Yes, `*[]` could be passed but this is more convenient.
+        if isinstance(data[0], list): data = data[0]
+
+        space_out = self._space_out
+        result = ""
+
         for value in data:
             value = str(value)
 
-            # Chop down value if too big.
-            if len(value) >= self._space_out:
-                value = value[ : self._space_out - 4]
+            # Chop down if too big.
+            # Avoid saving `len(value)` to a var because it might need chopping soon.
+            if len(value) >= space_out:
+                value = value[: space_out - 4]
                 value += "..."
 
-            res += value
-            res += " " * (self._space_out - len(value))
+            value_len = len(value)
 
-        if self._stdout:
-            print(res)
-        else:
-            return res
+            result += value
+            result += " " * (space_out - value_len)
 
-        # 2017-02-14: Removed 'headerprint' and integrated into 'tableprint'
-        # through is_header kwarg.
+        self._fp.write("{}\n".format(result))
+
         if is_header:
-            print("-" * len(res))
+            sep = "-" * len(result)
+            self._fp.write("{}\n".format(sep))
+
+        return
+
+    def close(self):
+        """
+        Close the file.
+        Don't bother with this if fp is set to `sys.stdout`.
+
+        Delete the instance of this class, or completely ignore it after
+        you call this function. It's useless after this is run.
+
+        :return: Nothing.
+        """
+
+        # Only actually close it if `self._fp` is a file object.
+        # We don't want to close `sys.stdout` for obvious reasons.
+        if isinstance(self._fp, io.IOBase):
+            self._fp.close()
 
         return
