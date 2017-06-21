@@ -9,7 +9,7 @@ import malaffinity
 import praw
 import requests
 
-from . import tableprint
+import tableprint
 
 
 wait_between_requests = 2
