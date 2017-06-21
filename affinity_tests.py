@@ -32,12 +32,31 @@ mal = config.items("mal")
 mal = dict(mal)
 
 
-# Set up MAL's cookie thing so we don't need to reset it
-# every time we connect to the site.
-mal_cookies = {
-    "MALSESSIONID": mal["session_cookie"],
-    "is_logged_in": "1"
-}
+# Set up the request session to authenticate with MAL
+session = requests.Session()
+
+# Retrieve the CSRF token from MAL and store into `session`'s cookies.
+# Auth won't work without this
+c = session.get("https://myanimelist.net/login.php")
+s = bs4.BeautifulSoup(c.content, "html.parser")
+csrf = s.select_one('meta[name="csrf_token"]').attrs["content"]
+
+# Now use that, as well as the username, password and other things, to authenticate
+r = session.post("https://myanimelist.net/login.php", data={
+    "user_name": mal["username"],
+    "password": mal["password"],
+    # Stay authenticated (not sure if this does anything)
+    "cookie": "1",
+    # Why, Xinil?
+    "submit": "1",
+    "csrf_token": csrf
+})
+
+# Check the request went well, raise an exception if not
+if r.status_code == requests.codes.found:
+    print("Successfully authenticated with MAL")
+else:
+    raise Exception("Something happened")
 
 
 # Set up the malaffinity thing now.
@@ -52,10 +71,9 @@ def get_comment_stream():
     return reddit.subreddit("anime").stream.comments()
 
 def get_affinity_from_mal(username):
-    resp = requests.request(
+    resp = session.request(
         "GET",
-        mal_profile_url.format(username),
-        cookies=mal_cookies
+        mal_profile_url.format(username)
     )
 
     # TODO: Handle this better.
@@ -64,7 +82,8 @@ def get_affinity_from_mal(username):
 
     resp = bs4.BeautifulSoup(resp.content, "html.parser")
 
-    affinity = resp.select_one(".user-compatability-graph .bar-inner")
+    # typo intentional. WHY, XINIL?
+    affinity = resp.select_one(".user-compatability-graph .bar-outer.anime .bar-inner")
     affinity = affinity.string.strip()
     # Handle the stupid "--" things that happen with negative affinities
     affinity = affinity.replace("--", "-")
@@ -154,8 +173,8 @@ def handle_comment(comment):
     # Save to results.
     results.append({
         "username": username,
-        "our_affinity": our_affinity,
-        "mal_affinity": mal_affinity,
+        "malaffinity": our_affinity,
+        "mals_affinity": mal_affinity,
         "match": our_affinity == mal_affinity
     })
 
@@ -194,15 +213,15 @@ def main():
     print("Writing results...")
 
     # Write to pretty table.
-    table = tableprint.TablePrint("results.txt", space_out=15)
+    table = tableprint.TablePrint("results.txt", space_out=20)
 
-    table.write_row("MAL Username", "Our Affinity", "MAL Affinity", "Match?", is_header=True)
+    table.write_row("MAL Username", "MALAffinity", "MAL's Affinity", "Match?", is_header=True)
 
     for result in results:
         row = [
             result["username"],
-            result["our_affinity"],
-            result["mal_affinity"],
+            result["malaffinity"],
+            result["mals_affinity"],
             result["match"]
         ]
 
