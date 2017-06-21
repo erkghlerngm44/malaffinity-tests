@@ -14,9 +14,8 @@ authenticate with MAL, visit a user's page and get affinity.
 Results are at 
 [`results_erkghlerngm44_ma1_20170410.txt`](results_erkghlerngm44_ma1_20170410.txt) and 
 [`results_someotheruser_ma2_20170621.txt`](results_someotheruser_ma2_20170621.txt) 
-(apologies for the shit taste for my results. I assure you, it has improved since then).
 
-Ran v1 from 17:27 to 18:27 (approx) on the 10th April and v2 from ... to ... (approx)
+Ran v1 from 17:27 to 18:27 (approx) on the 10th April and v2 from 16:40 to 17:40 (approx)
 on 21st June. As you can see, malaffinity returns the same affinity as MAL 100% of the time.
 
 
