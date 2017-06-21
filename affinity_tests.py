@@ -53,7 +53,7 @@ r = session.post("https://myanimelist.net/login.php", data={
 })
 
 # Check the request went well, raise an exception if not
-if r.status_code == requests.codes.found:
+if r.ok:
     print("Successfully authenticated with MAL")
 else:
     raise Exception("Something happened")
