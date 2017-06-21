@@ -9,10 +9,7 @@ import malaffinity
 import praw
 import requests
 
-# HACK: from . import tableprint not working for some reason.
-# Why do computers hate me?
-# (Well, technically not a hack)
-import tableprint
+from . import tableprint
 
 
 wait_between_requests = 2
@@ -107,24 +104,33 @@ def handle_comment(comment):
 
     time.sleep(wait_between_requests)
 
-    # NOTE: Change this if rate limit exceeded stuff is handled in malaffinity package.
-    # TODO: Better way of doing this (use the method in erkghlerngm44/affinity-gatherer)
-    try:
-        our_affinity = pearson.calculate_affinity(username)
+    success = False
 
-    except malaffinity.MALRateLimitExceededError:
-        print("- MAL rate limit reached. Halting for a few seconds...")
-        time.sleep(retry_after_failed_request)
-
+    for _ in range(2):
         try:
             our_affinity = pearson.calculate_affinity(username)
-        except:
-            print("- I give up. MAL, you baka!")
+
+        except malaffinity.exceptions.MALRateLimitExceededError:
+            print("- MAL rate limit exceeded. Halting for a few seconds...")
+            time.sleep(retry_after_failed_request)
+            continue
+
+        except malaffinity.exceptions.MALAffinityException:
+            print("- Affinity can't be calculated for some reason.")
             return
 
-    # Can't be bothered to list all the other exceptions...
-    except:
-        print("- Affinity can't be calculated for some reason. Ah well.")
+        except Exception as e:
+            # Will this ever happen?
+            print("- Some other error occured. Error: {}".format(e))
+
+            a = input("Press [ENTER] to skip, `X`, [ENTER] to exit ")
+            if a.upper() == "X": exit()
+            else: return
+
+        else:
+            success = True
+
+    if not success:
         return
 
     # No need to include shared as we're just checking affinity stuff.
@@ -145,16 +151,12 @@ def handle_comment(comment):
 
     print("- MAL says affinity is {}%".format(mal_affinity))
 
-    # More bad var naming. Sorry.
-    # Used "match" a few lines up and don't want to run into dodgy stuff.
-    did_we_get_it_right = our_affinity == mal_affinity
-
     # Save to results.
     results.append({
         "username": username,
         "our_affinity": our_affinity,
         "mal_affinity": mal_affinity,
-        "match": did_we_get_it_right
+        "match": our_affinity == mal_affinity
     })
 
     return

@@ -1,5 +1,5 @@
 bs4
 configparser
-malaffinity
-praw>=4
-requests
+malaffinity >=2, <3
+praw >=4, <5
+requests >=2, <3
