@@ -11,11 +11,13 @@ authenticate with MAL, visit a user's page and get affinity.
 
 
 ## The thing you're here for: the results!
-Results are at [`erkghlerngm44_results.txt`](erkghlerngm44_results.txt) 
-(apologies for the shit taste).
+Results are at 
+[`erkghlerngm44_results_malaffinity1.txt`](erkghlerngm44_results_malaffinity1.txt) and 
+[`someotheruser_results_malaffinity2.txt`](someotheruser_results_malaffinity2.txt) 
+(apologies for the shit taste for my results. I assure you, it has improved since then).
 
-Ran this script from 17:27 to 18:27 BST (approx) on the 10th April. As you can see,
-malaffinity returns the same affinity as MAL 100% of the time.
+Ran v1 from 17:27 to 18:27 (approx) on the 10th April and v2 from ... to ... (approx)
+on 21st June. As you can see, malaffinity returns the same affinity as MAL 100% of the time.
 
 
 ## I don't believe you! How do I run this myself?
@@ -23,14 +25,14 @@ Sigh
 
 ### Setup
 1. Download/fork/clone/whatever this repo.
-2. [Create a Reddit client](https://www.reddit.com/prefs/apps) and put your
+2. Create a copy of `config.ini.example` and rename it to `config.ini`.
+3. [Create a Reddit client](https://www.reddit.com/prefs/apps) and put your
    `client_id`, `client_secret`, as well as a unique `user_agent`
    ([guidelines](https://github.com/reddit/reddit/wiki/API)) under the
    `reddit` config in `config.ini`.
-3. Somehow acquire your `MALSESSIONID` cookie, and place that, as well as your
-   MAL username under the `mal` config in `config.ini`.
-4. Install dependencies (see ["Dependencies"](#dependencies) below).
-5. Run script (see ["Usage"](#usage) below).
+4. Put your MAL username and password under the `mal` config in `config.ini`.
+5. Install dependencies (see ["Dependencies"](#dependencies) below).
+6. Run script (see ["Usage"](#usage) below).
 
 ### Dependencies
 * BeautifulSoup4
@@ -42,10 +44,6 @@ Sigh
 For the lazy:
 
     $ pip install -r requirements.txt
-    
-You might run into issues when installing `MALAffinity`, specifically with
-Scipy and Numpy. If this is the case, follow the instructions 
-[here](https://github.com/erkghlerngm44/malaffinity#dependencies).
 
 ### Usage
 * Run script. (`$ python3 affinity_tests.py`)
