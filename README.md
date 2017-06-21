@@ -12,8 +12,8 @@ authenticate with MAL, visit a user's page and get affinity.
 
 ## The thing you're here for: the results!
 Results are at 
-[`erkghlerngm44_results_malaffinity1.txt`](erkghlerngm44_results_malaffinity1.txt) and 
-[`someotheruser_results_malaffinity2.txt`](someotheruser_results_malaffinity2.txt) 
+[`results_erkghlerngm44_ma1_20170410.txt`](results_erkghlerngm44_ma1_20170410.txt) and 
+[`results_someotheruser_ma2_20170621.txt`](results_someotheruser_ma2_20170621.txt) 
 (apologies for the shit taste for my results. I assure you, it has improved since then).
 
 Ran v1 from 17:27 to 18:27 (approx) on the 10th April and v2 from ... to ... (approx)
