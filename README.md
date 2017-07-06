@@ -11,12 +11,9 @@ authenticate with MAL, visit a user's page and get affinity.
 
 
 ## The thing you're here for: the results!
-Results are at 
-[`results_erkghlerngm44_ma1_20170410.txt`](results_erkghlerngm44_ma1_20170410.txt) and 
-[`results_someotheruser_ma2_20170621.txt`](results_someotheruser_ma2_20170621.txt) 
+Results are in the [`results`](results) folder.
 
-Ran v1 from 17:27 to 18:27 (approx) on the 10th April and v2 from 16:40 to 17:40 (approx)
-on 21st June. As you can see, malaffinity returns the same affinity as MAL 100% of the time.
+Filename format is: `ma{malaffinity-version}_{username}_{date-of-test-in-YYYYMMDD}`
 
 
 ## I don't believe you! How do I run this myself?
